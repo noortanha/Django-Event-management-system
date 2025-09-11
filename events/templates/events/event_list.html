@@ -1,0 +1,35 @@
+{% extends 'events/base.html' %}
+{% load static %}
+{% block title %} Event List {% endblock %}
+{%block content %}
+
+<div class="max-w-6xl mx-auto my-10">
+    <h1 class="text-3xl font-bold text-center text-pink-700 mb-6">All Events</h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for event in events %}
+        <div class="bg-pink-100 rounded-lg shadow-lg p-5 transition transform hover:scale-105 hover:shadow-xl">
+           
+
+            <h2 class="text-xl font-bold text-pink-700">{{ event.name }}</h2>
+            <p class="text-gray-600 mt-1 text-sm">{{ event.date }} | {{ event.time }}</p>
+            <p class="text-gray-500 mt-2 text-sm">{{ event.description|truncatewords:15 }}</p>
+
+            <div class="mt-4 flex justify-between items-center">
+                <span class="bg-pink-100 text-indigo-600 px-3 py-1 rounded text-sm">
+                    {{ event.category.name }}
+                </span>
+
+                <a href="{% url 'event_details' event.id %}" 
+                   class="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition">
+                    View Details
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center col-span-3 text-gray-600">No events available.</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

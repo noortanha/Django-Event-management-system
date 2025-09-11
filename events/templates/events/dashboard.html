@@ -1,0 +1,85 @@
+{% extends "events/base.html" %}
+{% load static %}
+{% block title %}Organizer Dashboard{% endblock %}
+
+{% block content %}
+<!-- Dashboard Header -->
+<h1 class="text-3xl font-bold text-center my-8 shadow-lg p-4 rounded-xl bg-pink-100">
+    Organizer Dashboard
+</h1>
+
+<!-- Dashboard Banner -->
+<div class="flex justify-center my-6">
+    <img src="{% static 'images/event pic.webp' %}" 
+         alt="Dashboard Banner"
+         class="rounded-2xl shadow-xl w-full sm:w-3/4 md:w-2/3 lg:w-1/2 transition hover:scale-105">
+</div>
+
+<hr class="w-3/4 mx-auto border-t-4 border-pink-400 rounded-lg shadow-md my-8">
+
+<!-- Summary Boxes -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mx-6 md:mx-12 my-6">
+    <!-- Upcoming Events -->
+    <div class="bg-blue-400 text-white text-center p-6 rounded-xl shadow-lg transform transition hover:scale-105 hover:bg-blue-500 cursor-pointer">
+        <h2 class="text-xl font-bold">Upcoming Events</h2>
+        <p class="mt-2 text-2xl">{{ upcoming_events }}</p>
+    </div>
+
+    <!-- Past Events -->
+    <div class="bg-pink-400 text-white text-center p-6 rounded-xl shadow-lg transform transition hover:scale-105 hover:bg-pink-500 cursor-pointer">
+        <h2 class="text-xl font-bold">Past Events</h2>
+        <p class="mt-2 text-2xl">{{ past_events }}</p>
+    </div>
+
+    <!-- Total Events -->
+    <div class="bg-green-400 text-white text-center p-6 rounded-xl shadow-lg transform transition hover:scale-105 hover:bg-green-500 cursor-pointer">
+        <h2 class="text-xl font-bold">Total Events</h2>
+        <p class="mt-2 text-2xl">{{ total_event }}</p>
+    </div>
+
+    <!-- Total Participants -->
+    <div class="bg-yellow-400 text-white text-center p-6 rounded-xl shadow-lg transform transition hover:scale-105 hover:bg-yellow-500 cursor-pointer">
+        <h2 class="text-xl font-bold">Total Participants</h2>
+        <p class="mt-2 text-2xl">{{ total_participant }}</p>
+    </div>
+</div>
+
+<hr class="w-3/4 mx-auto border-t-4 border-pink-400 rounded-lg shadow-md my-8">
+
+<!-- Events / Participants Section -->
+<div class="max-w-6xl mx-auto my-10 p-6 bg-purple-100 rounded-xl shadow-lg">
+    <h2 class="text-2xl font-bold mb-6 text-pink-700">{{ title }}</h2>
+
+    {% if participants %}
+        <!-- Show Participants -->
+        <ul class="space-y-3">
+            {% for p in participants %}
+            <li class="bg-white p-3 rounded-lg shadow flex justify-between items-center">
+                <span><strong>{{ p.name }}</strong> - {{ p.email }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <!-- Show Events -->
+        {% if events %}
+        <ul class="space-y-4">
+            {% for event in events %}
+            <li class="bg-white p-4 rounded-lg shadow hover:bg-pink-50 transition">
+                <h3 class="font-semibold text-lg text-pink-600">{{ event.name }}</h3>
+                <p class="text-sm text-gray-500">{{ event.date }} | {{ event.time }}</p>
+                <p class="text-gray-700 mt-1">{{ event.description|truncatechars:100 }}</p>
+                <p class="text-xs text-gray-600 mt-1">Participants: {{ event.participant_count }}</p>
+                <a href="{% url 'event_details' event.id %}" 
+                   class="inline-block mt-2 bg-pink-600 text-white px-3 py-1 rounded-lg shadow hover:bg-pink-700">
+                    View Details
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-gray-600">No events found.</p>
+        {% endif %}
+    {% endif %}
+</div>
+
+{% endblock %}

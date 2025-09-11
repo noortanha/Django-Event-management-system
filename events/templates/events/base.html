@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Event Management{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+<!-- ======== Navbar Start ======== -->
+<nav class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex justify-between items-center py-4">
+           
+            <a href="{% url 'dashboard' %}" class="text-2xl font-bold text-pink-500">EventPro</a>
+           <div class="hidden md:flex items-center space-x-8 font-semibold">
+                <a href="{% url 'home' %}" class="hover:text-pink-600">Home</a>
+
+           
+            <div class="hidden md:flex items-center space-x-8 font-semibold">
+                <a href="{% url 'dashboard' %}" class="hover:text-pink-600">Dashboard</a>
+
+               
+                <div class="relative group">
+                    <button class="hover:text-pink-500">Events▾</button>
+                    <div class="absolute left-0 hidden group-hover:block bg-white shadow-md rounded-md py-2 w-40">
+                        <a href="{% url 'event_create'%}" class="block px-4 py-2 hover:bg-gray-100">Create Event</a>
+
+                        <a href="{% url 'event_list'%}" class="block px-4 py-2 hover:bg-gray-100">Event List</a>
+                    </div>
+                </div>
+
+                <div class="relative group">
+                    <button class="hover:text-pink-500">Participants ▾</button>
+                    <div class="absolute left-0 hidden group-hover:block bg-white shadow-md rounded-md py-2 w-40">
+                        <a href="{% url 'participant_list'%}" class="block px-4 py-2 hover:bg-gray-100">Participants List</a>
+                        <a href="{% url 'add_participant'%}" class="block px-4 py-2 hover:bg-gray-100">Add Participants</a>
+                        
+                    </div>
+                </div>
+
+              
+
+                <div class="relative group">
+                    <button class="hover:text-pink-500">Category ▾</button>
+                    <div class="absolute left-0 hidden group-hover:block bg-white shadow-md rounded-md py-2 w-40">
+                        <a href="{%url 'category_list' %}" class="block px-4 py-2 hover:bg-gray-100">Category List</a>
+                        <a href="{%url 'add_category' %}" class="block px-4 py-2 hover:bg-gray-100">Add Category</a>
+                    </div>
+                </div>
+
+            </div>
+
+           
+
+    <div id="mobile-menu" class="hidden bg-white shadow-md md:hidden px-6 pb-4 space-y-2">
+        <a href="#" class="block py-2 hover:text-pink-500">HOME</a>
+        <a href="#" class="block py-2 hover:text-pink-500">Events</a>
+        <a href="#" class="block py-2 hover:text-pink-500">Participants</a>
+        <a href="#" class="block py-2 hover:text-pink-500">Category</a>
+        
+    </div>
+</nav>
+
+
+
+<div class="max-w-7xl mx-auto p-6">
+    {% block content %}{% endblock %}
+</div>
+
+<script>
+   
+    document.getElementById("menu-toggle").addEventListener("click", function () {
+        document.getElementById("mobile-menu").classList.toggle("hidden");
+    });
+</script>
+
+</body>
+</html>

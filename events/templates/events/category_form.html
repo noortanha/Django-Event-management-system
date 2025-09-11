@@ -1,0 +1,32 @@
+{% extends "events/base.html" %}
+{% load static %}
+
+{% block title %} Add Category {% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto my-10 p-6 bg-pink-200 rounded-xl shadow-lg">
+    <h1 class="text-3xl font-bold mb-6 text-center text-pink-700">
+        {{ title }}
+    </h1>
+
+    <form method="POST" class="space-y-4">
+        {% csrf_token %}
+        <div>
+            <label class="block font-medium text-pink-700">Category Name</label>
+            {{ form.name }}
+        </div>
+
+        <div>
+            <label class="block font-medium text-pink-700">Description</label>
+            {{ form.description }}
+        </div>
+
+        <div class="flex justify-center mt-4">
+            <button type="submit" 
+                    class="bg-pink-600 hover:bg-pink-700 text-white px-6 py-2 rounded-lg shadow-md transition">
+                Save
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
