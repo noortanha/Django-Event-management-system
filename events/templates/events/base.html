@@ -6,75 +6,99 @@
     <title>{% block title %}Event Management{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 text-gray-900">
 
-<!-- ======== Navbar Start ======== -->
-<nav class="bg-white shadow-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6">
-        <div class="flex justify-between items-center py-4">
-           
-            <a href="{% url 'dashboard' %}" class="text-2xl font-bold text-pink-500">EventPro</a>
-           <div class="hidden md:flex items-center space-x-8 font-semibold">
-                <a href="{% url 'home' %}" class="hover:text-pink-600">Home</a>
+  
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between items-center py-4">
 
-           
-            <div class="hidden md:flex items-center space-x-8 font-semibold">
-                <a href="{% url 'dashboard' %}" class="hover:text-pink-600">Dashboard</a>
+                
+                <a href="{% url 'dashboard-redirect' %}" class="text-2xl font-bold text-pink-500">
+                    EventPro
+                </a>
 
-               
-                <div class="relative group">
-                    <button class="hover:text-pink-500">Events▾</button>
-                    <div class="absolute left-0 hidden group-hover:block bg-white shadow-md rounded-md py-2 w-40">
-                        <a href="{% url 'event_create'%}" class="block px-4 py-2 hover:bg-gray-100">Create Event</a>
+                <div class="hidden md:flex items-center space-x-8 font-semibold">
 
-                        <a href="{% url 'event_list'%}" class="block px-4 py-2 hover:bg-gray-100">Event List</a>
-                    </div>
-                </div>
+                    <a href="{% url 'home' %}" class="hover:text-pink-600">Home</a>
 
-                <div class="relative group">
-                    <button class="hover:text-pink-500">Participants ▾</button>
-                    <div class="absolute left-0 hidden group-hover:block bg-white shadow-md rounded-md py-2 w-40">
-                        <a href="{% url 'participant_list'%}" class="block px-4 py-2 hover:bg-gray-100">Participants List</a>
-                        <a href="{% url 'add_participant'%}" class="block px-4 py-2 hover:bg-gray-100">Add Participants</a>
-                        
-                    </div>
-                </div>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard-redirect' %}" class="hover:text-pink-600">Dashboard</a>
+                    {% endif %}
 
-              
+                   
+                    {% if is_admin %}
+                        <div class="relative group">
+                            <button class="hover:text-pink-500">Manage ▾</button>
+                            <div class="absolute left-0 hidden group-hover:block bg-white shadow-md rounded-md py-2 w-48">
+                                <a href="{% url 'category_list' %}" class="block px-4 py-2 hover:bg-gray-100">Category List</a>
+                                <a href="{% url 'add_category' %}" class="block px-4 py-2 hover:bg-gray-100">Add Category</a>
+                                <a href="{% url 'participant_list' %}" class="block px-4 py-2 hover:bg-gray-100">Participants</a>
+                            </div>
+                        </div>
+                    {% endif %}
 
-                <div class="relative group">
-                    <button class="hover:text-pink-500">Category ▾</button>
-                    <div class="absolute left-0 hidden group-hover:block bg-white shadow-md rounded-md py-2 w-40">
-                        <a href="{%url 'category_list' %}" class="block px-4 py-2 hover:bg-gray-100">Category List</a>
-                        <a href="{%url 'add_category' %}" class="block px-4 py-2 hover:bg-gray-100">Add Category</a>
-                    </div>
-                </div>
+                   
+                    {% if is_organizer %}
+                        <div class="relative group">
+                            <button class="hover:text-pink-500">Events ▾</button>
+                            <div class="absolute left-0 hidden group-hover:block bg-white shadow-md rounded-md py-2 w-48">
+                                <a href="{% url 'event_create' %}" class="block px-4 py-2 hover:bg-gray-100">Create Event</a>
+                                <a href="{% url 'event_list' %}" class="block px-4 py-2 hover:bg-gray-100">Event List</a>
+                            </div>
+                        </div>
 
+                        <div class="relative group">
+                            <button class="hover:text-pink-500">Category ▾</button>
+                            <div class="absolute left-0 hidden group-hover:block bg-white shadow-md rounded-md py-2 w-48">
+                                <a href="{% url 'category_list' %}" class="block px-4 py-2 hover:bg-gray-100">Category List</a>
+                                <a href="{% url 'add_category' %}" class="block px-4 py-2 hover:bg-gray-100">Add Category</a>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    
+                    {% if is_participant %}
+                        <a href="{% url 'event_list' %}" class="hover:text-pink-600">View Events</a>
+                    {% endif %}
+
+                
+                    {% if user.is_authenticated %}
+                        <span class="font-semibold text-sm bg-pink-500 px-3 py-1 rounded-lg">
+                            👤 {{ user.username }}
+                            ({% if user.is_superuser %}Admin
+                            {% elif is_admin %}Admin
+                            {% elif is_organizer %}Organizer
+                            {% elif is_participant %}Participant
+                            {% endif %})
+                        </span>
+
+                        <form action="{% url 'logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit"
+                                class="bg-white text-pink-600 font-semibold px-4 py-1 rounded-lg hover:bg-pink-100 transition">
+                                Logout
+                            </button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'register' %}"
+                            class="bg-white text-pink-600 font-semibold px-4 py-1 rounded-lg hover:bg-pink-100 transition">
+                            Register
+                        </a>
+                        <a href="{% url 'login' %}"
+                            class="bg-white text-pink-600 font-semibold px-4 py-1 rounded-lg hover:bg-pink-100 transition">
+                            Login
+                        </a>
+                    {% endif %}
+                </div> 
             </div>
-
-           
-
-    <div id="mobile-menu" class="hidden bg-white shadow-md md:hidden px-6 pb-4 space-y-2">
-        <a href="#" class="block py-2 hover:text-pink-500">HOME</a>
-        <a href="#" class="block py-2 hover:text-pink-500">Events</a>
-        <a href="#" class="block py-2 hover:text-pink-500">Participants</a>
-        <a href="#" class="block py-2 hover:text-pink-500">Category</a>
-        
-    </div>
-</nav>
-
-
-
-<div class="max-w-7xl mx-auto p-6">
-    {% block content %}{% endblock %}
-</div>
-
-<script>
+        </div>
+    </nav>
    
-    document.getElementById("menu-toggle").addEventListener("click", function () {
-        document.getElementById("mobile-menu").classList.toggle("hidden");
-    });
-</script>
+    <div class="max-w-7xl mx-auto p-6">
+        {% block content %}{% endblock %}
+    </div>
 
 </body>
 </html>

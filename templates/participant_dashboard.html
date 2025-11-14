@@ -1,0 +1,51 @@
+{% extends 'events/base.html' %}
+
+{% block title %}Participant Dashboard{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow-lg rounded-2xl p-8">
+    <h1 class="text-3xl font-bold text-pink-600 mb-6">Welcome, {{ user.username}}!</h1>
+
+    <!-- Current Registered Events -->
+    <div class="mb-10">
+        <h2 class="text-2xl font-semibold text-pink-500 mb-4">Upcoming Events You Registered For</h2>
+
+        {% if registered_events %}
+            <div class="grid md:grid-cols-2 gap-6">
+                {% for event in registered_events %}
+                    <div class="p-5 border border-pink-200 rounded-xl bg-pink-50 hover:shadow-lg transition">
+                        <h3 class="text-xl font-semibold text-pink-700">{{ event.title }}</h3>
+                        <p class="text-gray-600 mt-1">{{ event.date|date:"F d, Y" }}</p>
+                        <p class="text-gray-700 mt-2">{{ event.description|truncatewords:20 }}</p>
+                        <a href="{% url 'event_details' event.id %}" class="inline-block mt-3 bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600">View Details</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-500 italic">You haven’t registered for any upcoming events yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- Past Events -->
+    <div>
+        <h2 class="text-2xl font-semibold text-pink-500 mb-4">Past Events You Participated In</h2>
+
+        {% if past_events %}
+            <div class="grid md:grid-cols-2 gap-6">
+                {% for event in past_events %}
+                    <div class="p-5 border border-pink-200 rounded-xl bg-pink-50 hover:shadow-lg transition">
+                        <h3 class="text-xl font-semibold text-pink-700">{{ event.title }}</h3>
+                        <p class="text-gray-600 mt-1">{{ event.date|date:"F d, Y" }}</p>
+                        <p class="text-gray-700 mt-2">{{ event.description|truncatewords:20 }}</p>
+                        <span class="inline-block mt-3 text-sm bg-pink-200 text-pink-700 px-3 py-1 rounded-full font-semibold">
+                            Completed
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-500 italic">No past events found.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

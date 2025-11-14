@@ -1,58 +1,59 @@
 from django import forms
-from .models import Event, Participant, Category
+from .models import Event, RSVP, Category
 from django.core.exceptions import ValidationError
+from django.utils import timezone
+
+
+
 class EventForm(forms.ModelForm):
-    
     class Meta:
         model = Event
-        fields = ("name","description","date","time","location","category","participants")
-        widget = {
-            'name' : forms.TextInput(attrs={
-                'class' : 'form-control',
-                'placeholder' : 'Enter Event Name'
+        fields = ("name", "description", "date", "time", "location", "category",)
+        widgets = {  
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter Event Name'
             }),
-            'description' : forms.Textarea(attrs={
-                'class' : 'form-control',
-                'rows' :3
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3
             }),
             'date': forms.DateInput(attrs={
-                'class' : "form-control",
-                'type' :'date',
-                'placeholder' : 'dd/mm/yyyy'
+                'class': 'form-control',
+                'type': 'date',
+                'placeholder': 'dd/mm/yyyy'
             }),
-            'location' : forms.TextInput(attrs={
-                'class' : 'form-control',
-                'placeholder' :'Enter Event location'
-
+            'time': forms.TimeInput(attrs={  
+                'class': 'form-control',
+                'type': 'time'
             }),
-            'participants': forms.SelectMultiple(attrs={"size" : 6})
-
+            'location': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter Event location'
+            }),
+           
         }
 
-class ParticipantForm(forms.ModelForm):
-     class Meta:
-        model = Participant
-        fields = ("name","email")
-        widgets = {
-            'name': forms.TextInput(attrs={
-                'class': 'w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400',
-                'placeholder': 'Enter full name'
-            }),
-            'email': forms.EmailInput(attrs={
-                'class': 'w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400',
-                'placeholder': 'Enter email address'
-            }),
-            'event': forms.Select(attrs={
-                'class': 'w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400'
-            }),
-        }
-            
-        
-     def clean_email(self):
-         email = self.cleaned_data["email"]
-         if Participant.objects.filter(email=email).exists():
-             raise ValidationError ("This email is already registered.")
-         return email
+    def clean(self):
+        cleaned_data = super().clean()
+        date = cleaned_data.get("date")
+        time = cleaned_data.get("time")
+
+        if date and time:
+            event_datetime = timezone.make_aware(
+                timezone.datetime.combine(date, time)
+            )
+            now = timezone.now()
+
+            if event_datetime <= now:
+                raise forms.ValidationError(
+                    " Event date/time must be in the future. You cannot set today or past."
+                )
+
+        return cleaned_data
+
+    
+
      
 
 
@@ -70,4 +71,13 @@ class CategoryForm(forms.ModelForm):
                 'placeholder': 'Enter category description',
                 'rows': 3
             }),
+        }
+
+
+class RSVPForm(forms.ModelForm):
+    class Meta:
+        model = RSVP
+        fields = ['response']
+        widgets = {
+            'response': forms.Select(attrs={'class': 'form-control'})
         }

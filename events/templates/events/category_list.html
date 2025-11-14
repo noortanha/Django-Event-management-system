@@ -18,12 +18,8 @@
             <tbody>
                 {% for category in categories %}
                 <tr class="border-b hover:bg-pink-50 transition">
-                    <td class="py-3 px-4">{{ forloop.counter }}</td>
-                    <td class="py-3 px-4">
-                        <a href="{% url 'events_by_category' category.id %}" 
-                           class="text-pink-600 hover:underline font-semibold">
-                           {{ category.name }}
-                        </a>
+                    <td class="py-3 px-4 text-pink-600 font-semibold">
+                        {{ category.name }}
                     </td>
                     <td class="py-3 px-4">{{ category.description }}</td>
                      <td class="py-3 px-4 flex justify-center gap-3">

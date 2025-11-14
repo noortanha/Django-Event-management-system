@@ -24,6 +24,21 @@
                    class="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition">
                     View Details
                 </a>
+              {% if user.is_authenticated and is_participant %}
+                    {% if event_status.event.id %}
+                        <button class="px-3 py-1 mt-2 bg-gray-400 text-white rounded cursor-not-allowed">
+                            Already Registered
+                        </button>
+                    {% else %}
+                        <a href="{% url 'rsvp_event' event.id %}" 
+                        class="inline-block px-3 py-1 mt-2 text-white bg-pink-600 hover:bg-pink-700 rounded">
+                        RSVP
+                        </a>
+                    {% endif %}
+                {% endif %}
+
+
+
             </div>
         </div>
         {% empty %}

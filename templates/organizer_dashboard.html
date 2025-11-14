@@ -1,0 +1,114 @@
+{% extends "events/base.html" %}
+{% load static %}
+
+{% block title %}Organizer Dashboard{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-pink-50 flex">
+  <!-- ===== Sidebar ===== -->
+  <aside class="w-64 bg-pink-100 p-4 shadow-md flex flex-col justify-between">
+    <div>
+      <!-- Header -->
+      <div class="text-center mb-6">
+        <h2 class="text-2xl font-bold text-pink-700"> Organizer Dashboard</h2>
+        <p class="text-sm text-pink-500">Manage your system</p>
+      </div>
+
+      <!-- Event Menu -->
+      <div class="mb-6">
+        <h3 class="uppercase text-xs font-semibold text-pink-600 mb-2"> Events</h3>
+        <nav class="flex flex-col space-y-2">
+          <a href="{% url 'event_create' %}" class="bg-pink-200 hover:bg-pink-300 text-pink-800 px-3 py-2 rounded-lg"> Create Event</a>
+          <a href="{% url 'event_list' %}" class="bg-pink-200 hover:bg-pink-300 text-pink-800 px-3 py-2 rounded-lg"> View All Events</a>
+          <a href="{% url 'upcoming_events' %}" class="bg-pink-200 hover:bg-pink-300 text-pink-800 px-3 py-2 rounded-lg"> Upcoming Events</a>
+          <a href="{% url 'past_events' %}" class="bg-pink-200 hover:bg-pink-300 text-pink-800 px-3 py-2 rounded-lg"> Past Events</a>
+          <a href="{% url 'today_events' %}" class="bg-pink-200 hover:bg-pink-300 text-pink-800 px-3 py-2 rounded-lg">Today’s Events</a>
+        </nav>
+      </div>
+
+      <!-- Category Menu -->
+      <div class="mb-6">
+        <h3 class="uppercase text-xs font-semibold text-pink-600 mb-2"> Categories</h3>
+        <nav class="flex flex-col space-y-2">
+          <a href="{% url 'category_list' %}" class="bg-pink-200 hover:bg-pink-300 text-pink-800 px-3 py-2 rounded-lg"> View Categories</a>
+        </nav>
+      </div>
+
+      <!-- Participants -->
+      <div class="mb-6">
+        <h3 class="uppercase text-xs font-semibold text-pink-600 mb-2">Participants</h3>
+        <nav class="flex flex-col space-y-2">
+          <a href="{% url 'participant_list' %}" class="bg-pink-200 hover:bg-pink-300 text-pink-800 px-3 py-2 rounded-lg"> View Participants</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Summary Section -->
+    <div class="space-y-2">
+      <p class="bg-pink-300 text-pink-900 px-3 py-2 rounded-lg text-center font-semibold">Total Events: {{ events_count }}</p>
+      <p class="bg-pink-300 text-pink-900 px-3 py-2 rounded-lg text-center font-semibold">Upcoming: {{ upcoming_events }}</p>
+      <p class="bg-pink-300 text-pink-900 px-3 py-2 rounded-lg text-center font-semibold">Past: {{ past_events }}</p>
+      <p class="bg-pink-300 text-pink-900 px-3 py-2 rounded-lg text-center font-semibold">Participants: {{ total_participants }}</p>
+    </div>
+  </aside>
+
+  <!-- ===== Main Content ===== -->
+  <main class="flex-1 p-6 bg-pink-50">
+    <h2 class="text-3xl font-bold text-pink-700 mb-6"> Dashboard Overview</h2>
+
+    <!-- ===== Upcoming Events ===== -->
+    <section class="mb-10">
+      <h3 class="text-xl font-semibold text-pink-600 mb-4"> Upcoming Events</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {% for event in upcoming_event_list|slice:":3" %}
+        <div class="bg-white rounded-xl shadow-md p-4 border border-pink-200">
+          <h4 class="font-bold text-pink-700">{{ event.title }}</h4>
+          <p class="text-sm text-gray-500 mb-2">{{ event.date|date:"M d, Y" }}</p>
+          <p class="text-sm text-gray-700">{{ event.description|truncatechars:70 }}</p>
+          <a href="{% url 'event_detail' event.id %}" class="inline-block mt-3 bg-pink-500 hover:bg-pink-600 text-white px-3 py-1 rounded-md text-sm">View</a>
+        </div>
+        {% empty %}
+        <p class="text-gray-500">No upcoming events found.</p>
+        {% endfor %}
+      </div>
+      <a href="{% url 'upcoming_events' %}" class="mt-4 inline-block bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md text-sm">See All</a>
+    </section>
+
+    <!-- ===== Today’s Events ===== -->
+    <section class="mb-10">
+      <h3 class="text-xl font-semibold text-pink-600 mb-4"> Today’s Events</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {% for event in today_events|slice:":3" %}
+        <div class="bg-white rounded-xl shadow-md p-4 border border-pink-200">
+          <h4 class="font-bold text-pink-700">{{ event.title }}</h4>
+          <p class="text-sm text-gray-500 mb-2">{{ event.date|date:"M d, Y" }}</p>
+          <p class="text-sm text-gray-700">{{ event.description }}</p>
+          <a href="{% url 'event_detail' event.id %}" class="inline-block mt-3 bg-pink-500 hover:bg-pink-600 text-white px-3 py-1 rounded-md text-sm">View</a>
+        </div>
+        {% empty %}
+        <p class="text-gray-500">No events scheduled for today.</p>
+        {% endfor %}
+      </div>
+      <a href="{% url 'today_events' %}" class="mt-4 inline-block bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md text-sm">See All</a>
+    </section>
+
+    <!-- ===== Past Events ===== -->
+    <section>
+      <h3 class="text-xl font-semibold text-pink-600 mb-4"> Past Events</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {% for event in past_event_list|slice:":3" %}
+        <div class="bg-white rounded-xl shadow-md p-4 border border-pink-200">
+          <h4 class="font-bold text-pink-700">{{ event.title }}</h4>
+          <p class="text-sm text-gray-500 mb-2">{{ event.date|date:"M d, Y" }}</p>
+          <p class="text-sm text-gray-700">{{ event.description|truncatechars:70 }}</p>
+          <a href="{% url 'event_detail' event.id %}" class="inline-block mt-3 bg-pink-500 hover:bg-pink-600 text-white px-3 py-1 rounded-md text-sm">View</a>
+        </div>
+        {% empty %}
+        <p class="text-gray-500">No past events found.</p>
+        {% endfor %}
+      </div>
+      <a href="{% url 'past_events' %}" class="mt-4 inline-block bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md text-sm">See All</a>
+    </section>
+  </main>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+#print(" events signals loaded!")
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User, Group
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.conf import settings
+
+@receiver(post_save, sender=User)
+def send_activation_email(sender, instance, created, **kwargs):
+    if created:
+        #print(f"Activation signal triggered for {instance.username}")
+        token = default_token_generator.make_token(instance)
+        activation_url = f"{settings.FRONTEND_URL}/users/activate/{instance.id}/{token}/"
+        subject = "Activate Your Account"
+        message = f"Hi {instance.username},\n\nPlease activate your account: {activation_url}"
+        try:
+            send_mail(subject, message, settings.EMAIL_HOST_USER, [instance.email], fail_silently=True)
+        except Exception as e:
+            print("Activation email send failed:", e)
+       
+
+
+@receiver(post_save, sender=User)
+def assign_default_group(sender, instance, created, **kwargs):
+    if created:
+        group, _ = Group.objects.get_or_create(name='Participant')
+        instance.groups.add(group)
+        instance.save()
