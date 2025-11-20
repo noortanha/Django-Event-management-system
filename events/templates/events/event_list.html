@@ -1,50 +1,73 @@
 {% extends 'events/base.html' %}
 {% load static %}
 {% block title %} Event List {% endblock %}
-{%block content %}
 
+{% block content %}
 <div class="max-w-6xl mx-auto my-10">
-    <h1 class="text-3xl font-bold text-center text-pink-700 mb-6">All Events</h1>
+    <h1 class="text-3xl font-bold text-center text-pink-700 mb-6">All Upcoming Events</h1>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for event in events %}
-        <div class="bg-pink-100 rounded-lg shadow-lg p-5 transition transform hover:scale-105 hover:shadow-xl">
-           
-
-            <h2 class="text-xl font-bold text-pink-700">{{ event.name }}</h2>
-            <p class="text-gray-600 mt-1 text-sm">{{ event.date }} | {{ event.time }}</p>
-            <p class="text-gray-500 mt-2 text-sm">{{ event.description|truncatewords:15 }}</p>
-
-            <div class="mt-4 flex justify-between items-center">
-                <span class="bg-pink-100 text-indigo-600 px-3 py-1 rounded text-sm">
-                    {{ event.category.name }}
-                </span>
-
-                <a href="{% url 'event_details' event.id %}" 
-                   class="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition">
-                    View Details
-                </a>
-              {% if user.is_authenticated and is_participant %}
-                    {% if event_status.event.id %}
-                        <button class="px-3 py-1 mt-2 bg-gray-400 text-white rounded cursor-not-allowed">
-                            Already Registered
-                        </button>
-                    {% else %}
-                        <a href="{% url 'rsvp_event' event.id %}" 
-                        class="inline-block px-3 py-1 mt-2 text-white bg-pink-600 hover:bg-pink-700 rounded">
-                        RSVP
-                        </a>
-                    {% endif %}
+            <div class="bg-pink-100 rounded-lg shadow-lg overflow-hidden transition transform hover:scale-105 hover:shadow-xl">
+                
+                <!-- Event Image -->
+                {% if event.image %}
+                    <img src="{{ event.image.url }}" alt="{{ event.name }}" class="w-full h-48 object-cover">
+                {% else %}
+                    <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
+                        No Image
+                    </div>
                 {% endif %}
 
+                <div class="p-5">
+                    <!-- Event Info -->
+                    <h2 class="text-xl font-bold text-pink-700">{{ event.name }}</h2>
+                    <p class="text-gray-600 mt-1 text-sm">{{ event.date }} | {{ event.time }}</p>
+                    <p class="text-gray-500 mt-2 text-sm">{{ event.description|truncatewords:15 }}</p>
 
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="bg-pink-100 text-indigo-600 px-3 py-1 rounded text-sm">
+                            {{ event.category.name }}
+                        </span>
 
+                        <a href="{% url 'event_details' event.id %}" 
+                           class="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition">
+                           View Details
+                        </a>
+                    </div>
+
+                    <!-- RSVP button for logged-in users -->
+                    {% if user.is_authenticated %}
+                        {% if event.id in user_rsvp_events %}
+                            <button class="px-3 py-1 mt-2 bg-gray-400 text-white rounded cursor-not-allowed">
+                                Already Registered
+                            </button>
+                        {% else %}
+                            <a href="{% url 'rsvp_event' event.id %}" 
+                               class="inline-block px-3 py-1 mt-2 text-white bg-pink-600 hover:bg-pink-700 rounded">
+                               RSVP
+                            </a>
+                        {% endif %}
+                    {% endif %}
+
+                    <!-- Organizer actions: Update/Delete -->
+                    {% if user.is_authenticated and event.organizer == user %}
+                        <div class="mt-2 flex space-x-2">
+                            <a href="{% url 'event_update' event.id %}" 
+                               class="px-3 py-1 text-white bg-blue-600 hover:bg-blue-700 rounded">
+                               Update
+                            </a>
+                            <a href="{% url 'event_delete' event.id %}" 
+                               class="px-3 py-1 text-white bg-red-600 hover:bg-red-700 rounded">
+                               Delete
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
-        </div>
         {% empty %}
-        <p class="text-center col-span-3 text-gray-600">No events available.</p>
+            <p class="text-center col-span-3 text-gray-600">No upcoming events available.</p>
         {% endfor %}
     </div>
 </div>
-
 {% endblock %}

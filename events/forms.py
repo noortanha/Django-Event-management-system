@@ -8,7 +8,7 @@ from django.utils import timezone
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ("name", "description", "date", "time", "location", "category",)
+        fields = ("name", "description", "date", "time", "location", "category","image")
         widgets = {  
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -31,7 +31,9 @@ class EventForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Enter Event location'
             }),
-           
+           'image': forms.ClearableFileInput(attrs={
+                'class': 'form-control'
+            }),
         }
 
     def clean(self):

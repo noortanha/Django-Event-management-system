@@ -1,4 +1,4 @@
-print("🔔 user signals loaded!")
+
 
 from django.apps import AppConfig
 

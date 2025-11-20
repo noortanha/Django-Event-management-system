@@ -17,15 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from events import views
-
+from events.views import AdminDashboardView, EventListView, EventCreateView,EventUpdateView,OrganizerDashboardView
 
 urlpatterns = [
     
    
-    path('events/create/', views.event_create, name='event_create'),
-    path('events/', views.event_list, name='event_list'),
+    path('events/create/', EventCreateView.as_view(), name='event_create'),
+    path('events/',EventListView.as_view(), name='event_list'),
     path('events/<int:id>/', views.event_details, name='event_details'),
-    path('events/update/<int:id>/', views.event_update, name='event_update'),
+    path('events/update/<int:id>/', EventUpdateView.as_view(), name='event_update'),
     path('events/delete/<int:id>/', views.event_delete, name='event_delete'),
     path('events/today/', views.today_events, name='today_events'),
 
@@ -43,16 +43,15 @@ urlpatterns = [
     path('participants/delete/<int:id>/', views.delete_participant, name='delete_participant'),
 
     path('dashboard/', views.dashboard_redirect, name='dashboard-redirect'),
-    path('dashboard/admin/', views.admin_dashboard, name='admin-dashboard'),
-    path('dashboard/organizer/', views.organizer_dashboard, name='organizer-dashboard'),
-    path('dashboard/participant/', views.participant_dashboard, name='participant-dashboard'),
+    path('dashboard/admin/',AdminDashboardView.as_view() , name='admin-dashboard'),
+    #path('dashboard/organizer/', views.organizer_dashboard, name='organizer-dashboard'),
+    path('dashboard/organizer/', OrganizerDashboardView.as_view(), name='organizer-dashboard'),
+    path('dashboard/participant/', views.participant_dashboard, name='participant_dashboard'),
 
     path('rsvp/<int:event_id>/', views.rsvp_event, name='rsvp_event'),
+    path('dashboard_redirect/', views.dashboard_redirect, name='dashboard_redirect'),
 
 
-    path('admin/dashboard/', views.admin_dashboard, name='admin-dashboard'),
-    path('organizer/dashboard/', views.organizer_dashboard, name='organizer-dashboard'),
-    path('participant/dashboard/', views.participant_dashboard, name='participant-dashboard'),
     
 ]
     

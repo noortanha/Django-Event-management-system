@@ -66,7 +66,7 @@
           <h4 class="font-bold text-pink-700">{{ event.title }}</h4>
           <p class="text-sm text-gray-500 mb-2">{{ event.date|date:"M d, Y" }}</p>
           <p class="text-sm text-gray-700">{{ event.description|truncatechars:70 }}</p>
-          <a href="{% url 'event_detail' event.id %}" class="inline-block mt-3 bg-pink-500 hover:bg-pink-600 text-white px-3 py-1 rounded-md text-sm">View</a>
+          <a href="{% url 'event_details' event.id %}" class="inline-block mt-3 bg-pink-500 hover:bg-pink-600 text-white px-3 py-1 rounded-md text-sm">View</a>
         </div>
         {% empty %}
         <p class="text-gray-500">No upcoming events found.</p>
@@ -84,7 +84,7 @@
           <h4 class="font-bold text-pink-700">{{ event.title }}</h4>
           <p class="text-sm text-gray-500 mb-2">{{ event.date|date:"M d, Y" }}</p>
           <p class="text-sm text-gray-700">{{ event.description }}</p>
-          <a href="{% url 'event_detail' event.id %}" class="inline-block mt-3 bg-pink-500 hover:bg-pink-600 text-white px-3 py-1 rounded-md text-sm">View</a>
+          <a href="{% url 'event_details' event.id %}" class="inline-block mt-3 bg-pink-500 hover:bg-pink-600 text-white px-3 py-1 rounded-md text-sm">View</a>
         </div>
         {% empty %}
         <p class="text-gray-500">No events scheduled for today.</p>

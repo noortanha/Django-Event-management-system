@@ -3,18 +3,15 @@
 {% block content %}
 
 <div class="max-w-3xl mx-auto my-10 p-6 bg-pink-200 rounded-xl shadow-lg flex justify-center">
-    
-
-    <form method="POST" enctype="multipart/form-data" class="space-y-4 rounded-3xl" >
+    <form method="POST" enctype="multipart/form-data" class="space-y-4 rounded-3xl">
         {% csrf_token %}
-      <h1 class=" font-bold mb-6 text-center text-pink-700 rounded-3xl text-3xl">Create New Event</h1>
-       
+        <h1 class="font-bold mb-6 text-center text-pink-700 text-3xl">Create New Event</h1>
+
         <div>
             <label class="block font-medium text-gray-700">Event Name</label>
             {{ form.name }}
         </div>
 
-        
         <div>
             <label class="block font-medium text-gray-700">Description</label>
             {{ form.description }}
@@ -31,26 +28,25 @@
             </div>
         </div>
 
-     
         <div>
-            <label class="block font-medium text-gray-700 rounded-lg">Location</label>
+            <label class="block font-medium text-gray-700">Location</label>
             {{ form.location }}
         </div>
-
 
         <div>
             <label class="block font-medium text-gray-700">Category</label>
             {{ form.category }}
         </div>
 
-       
+        <div>
+            <label class="block font-medium text-gray-700">Image</label>
+            {{ form.image }}
+        </div>
 
         <div>
             <label class="block font-medium text-gray-700">Participants</label>
             {{ form.participants }}
-            
         </div>
-
 
         <div class="text-center">
             <button type="submit" class="bg-pink-900 text-white px-6 py-2 rounded-lg shadow hover:bg-indigo-700 transition">

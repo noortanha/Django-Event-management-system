@@ -2,6 +2,11 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 import re
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, PasswordResetForm, SetPasswordForm
+from User.models import CustomUser
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 
 
 class StyledFormMixin:
@@ -24,14 +29,20 @@ class CustomRegistrationForm(StyledFormMixin, forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name',
-                  'email']
+                  'email', 'phone_number']
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("Email already exists")
         return email
-
+    
+    def clean_phone_number(self):
+        phone = self.cleaned_data.get('phone_number')
+        if not phone.isdigit() or len(phone) != 11:
+            raise forms.ValidationError("Phone number must be 10 digits.")
+        return phone
+    
     def clean_password(self):
         password = self.cleaned_data.get('password')
         errors = []
@@ -74,3 +85,20 @@ class CustomRegistrationForm(StyledFormMixin, forms.ModelForm):
         if commit:
             user.save()
         return user
+    
+
+class EditProfileForm(StyledFormMixin, forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'first_name', 'last_name', 'phone_number','profile_image']
+
+class CustomPasswordChangeForm(StyledFormMixin, PasswordChangeForm):
+    pass
+
+
+class CustomPasswordResetForm(StyledFormMixin, PasswordResetForm):
+    pass
+
+
+class CustomPasswordResetConfirmForm(StyledFormMixin, SetPasswordForm):
+    pass

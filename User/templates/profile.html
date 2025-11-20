@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-pink-100 min-h-screen flex justify-center items-center py-10">
+
+    <div class="bg-white p-8 rounded-xl shadow-xl w-3/4 flex gap-8">
+
+        <div>
+            <img src="{{ profile_image.url }}" alt="Profile Photo" class="w-48 h-48 object-cover rounded-xl border-4 border-pink-500">
+        </div>
+
+        <div class="flex-1">
+            <h2 class="text-3xl font-bold text-pink-500 mb-3">{{ username }}</h2>
+
+            <p class="mb-2"><span class="font-semibold">Name:</span> {{ name }}</p>
+            <p class="mb-2"><span class="font-semibold">Email:</span> {{ email }}</p>
+             <p class="mb-2"><span class="font-semibold text-pink-500">Phone:</span> {{phone_number }}</p>
+            <p class="mb-2"><span class="font-semibold">Member Since:</span> {{ member_since }}</p>
+            <p class="mb-2"><span class="font-semibold">Last Login:</span> {{ last_login }}</p>
+
+            <a href="{% url 'password_change' %}" class="mt-5 inline-block bg-pink-500 text-white px-5 py-2 rounded-lg hover:bg-pink-600 transition">Change Password</a>
+            <a href="{% url 'edit_profile' %}" class="mt-5 inline-block bg-pink-500 text-white px-5 py-2 rounded-lg hover:bg-pink-600 transition">Edit Profile</a>
+        </div>
+
+    </div>
+</body>
+</html>
+
+
